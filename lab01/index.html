@@ -3,11 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Quiz</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="quiz.css" />
     <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="quiz.js" type="text/javascript"></script>
 </head>
 <body>
 
+<div class="container">
+    <div class="row">
+        <div class="col-xs">
+            <div class="quiz" id="quiz-1">
+
+                <div class="quiz__head">
+
+                    <h1 class="quiz__head-title">
+                        Wybierz quiz
+                    </h1>
+                    <div class="quiz__head-select">
+                        <select name="quiz" class="jq-quiz__select">
+                            <option value="">--</option>
+                            <option value="1">Quiz 1</option>
+                            <option value="2">Quiz 2</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="quiz__board jq-quiz__board hidden">
+
+                    <h2 class="jq-quiz__title"></h2>
+
+                    <ul class="step-progress js-quiz__steps">
+
+                    </ul>
+
+                    <div class="quiz__timer timer">
+                        <div class="timer__progress jq-quiz__timer-progress"></div>
+                    </div>
+
+                    <div class="quiz__questions jq-quiz__question">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 </body>
