@@ -45,6 +45,7 @@ class Quiz {
     }
 
     nextStep() {
+
         if (this.quizState.currentQuestionId === this.quiz.questions.length - 1) {
             this.hideQuestion();
             this.showSummary();
@@ -52,8 +53,8 @@ class Quiz {
         else {
             this.showQuestion(this.quizState.currentQuestionId + 1);
         }
-    }
 
+    }
 
     updateQuestionStat(questionId, stat) {
 
@@ -62,68 +63,15 @@ class Quiz {
 
     }
 
-    generateResult(){
-
-        let results = [];
-        let storedResults = localStorage.getItem('_quiz');
-        if (storedResults) {
-            results = JSON.parse(storedResults);
-        }
-
-        results.push({
-            time: new Date(),
-            correct: this.quizState.correct,
-            wrong: this.quizState.wrong,
-            missed: this.quizState.missed
-        });
-
-        return results;
-
-    }
-
-    storeResults(results){
-        localStorage.setItem('_quiz', JSON.stringify(results));
-    }
-
-    calculateChange(results){
-        let improvedCorrect = null;
-        if (results.length > 1) {
-            let previousCorrect = results[results.length - 2].correct;
-            improvedCorrect = previousCorrect === 0 ? 1 : (this.quizState.correct - previousCorrect) / previousCorrect;
-            improvedCorrect = improvedCorrect * 100;
-        }
-        return improvedCorrect;
-    }
-
     showSummary() {
 
-        let results = this.generateResult();
-
-        this.storeResults(results);
-
-        let improvedCorrect = this.calculateChange(results);
-        let percentageResult = ((this.quizState.correct / this.quiz.questions.length) * 100);
-
-        let tpl = this.generateSummaryTpl(percentageResult, improvedCorrect);
+        let quizSummary = new QuizSummary(this.quizState, this.quiz);
+        quizSummary.calculateAndStoreResult();
 
         this.container.removeClass('quiz--board');
         this.container.addClass('quiz--summary');
 
-        this.quizSummary.html(tpl);
-    }
-
-    generateSummaryTpl(percentageResult, improvedCorrect) {
-
-        let tpl = `
-        Ocena: ${percentageResult.toFixed(2)}%<br />
-        <div class="timer">
-            <div class="timer__progress" style="width:${percentageResult}%"></div>
-        </div><br />`;
-
-        if (improvedCorrect !== null) {
-            tpl += `W porównaniu do poprzedniego wyniku: ${improvedCorrect}%`;
-        }
-        return tpl;
+        this.quizSummary.html(quizSummary.render());
 
     }
 
@@ -202,16 +150,92 @@ class Quiz {
     }
 
     showTitle() {
+
         this.quizTitle.html(this.quiz.name);
+
     }
 
     showBoard() {
+
         this.container.removeClass('quiz--select');
         this.container.addClass('quiz--board');
+
     }
 
     hideQuestion() {
+
         this.quizQuestion.html('');
+
+    }
+
+}
+
+class QuizSummary {
+
+    constructor(quizState, quiz){
+
+        this.quizState = quizState;
+        this.quiz = quiz;
+
+    }
+
+    calculateAndStoreResult(){
+
+        let results = this.generateResult();
+
+        this.storeResults(results);
+
+        this.improvedCorrect = this.calculateChange(results);
+        this.percentageResult = ((this.quizState.correct / this.quiz.questions.length) * 100);
+
+    }
+
+    generateResult(){
+
+        let results = [];
+        let storedResults = localStorage.getItem('_quiz');
+        if (storedResults) {
+            results = JSON.parse(storedResults);
+        }
+
+        results.push({
+            time: new Date(),
+            correct: this.quizState.correct,
+            wrong: this.quizState.wrong,
+            missed: this.quizState.missed
+        });
+
+        return results;
+
+    }
+
+    storeResults(results){
+        localStorage.setItem('_quiz', JSON.stringify(results));
+    }
+
+    calculateChange(results){
+        let improvedCorrect = null;
+        if (results.length > 1) {
+            let previousCorrect = results[results.length - 2].correct;
+            improvedCorrect = previousCorrect === 0 ? 1 : (this.quizState.correct - previousCorrect) / previousCorrect;
+            improvedCorrect = improvedCorrect * 100;
+        }
+        return improvedCorrect;
+    }
+
+    render() {
+
+        let tpl = `
+        Ocena: ${this.percentageResult.toFixed(2)}%<br />
+        <div class="timer">
+            <div class="timer__progress" style="width:${this.percentageResult}%"></div>
+        </div><br />`;
+
+        if (this.improvedCorrect !== null) {
+            tpl += `W porównaniu do poprzedniego wyniku: ${this.improvedCorrect.toFixed(2)}%`;
+        }
+        return tpl;
+
     }
 
 }
@@ -329,6 +353,8 @@ class Timer {
     }
 
     start(onStop) {
+
+        this.updateProgress();
 
         if (this.loop) {
             return;

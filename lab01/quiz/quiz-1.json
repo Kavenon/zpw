@@ -41,6 +41,16 @@
         "Ryba"
       ],
       "correct": [0]
+    },
+    {
+      "question": "Dokończ. Gdzie kucharek sześć tam nie ma co...",
+      "answers": [
+        "papusiać",
+        "zajadać",
+        "gotować",
+        "jeść"
+      ],
+      "correct": [3]
     }
   ]
 }
