@@ -1,12 +1,15 @@
 'use strict';
 
+const _CORRECT_STATE = 1;
+const _WRONG_STATE = -1;
+const _MISSED_STATE = 0;
+
 class Quiz {
 
     constructor(container) {
 
         this.container = container;
         this.quizSelector = this.container.find('.jq-quiz__select');
-        this.quizBoard = this.container.find('.jq-quiz__board');
         this.quizTitle = this.container.find('.jq-quiz__title');
         this.quizTimer = this.container.find('.jq-quiz__timer');
         this.quizSteps = this.container.find('.jq-quiz__steps');
@@ -30,11 +33,11 @@ class Quiz {
 
         if (this.quizState.currentQuestion.correct(answerIds)) {
             this.quizState.correct++;
-            this.updateQuestionStat(this.quizState.currentQuestionId, 1);
+            this.updateQuestionStat(this.quizState.currentQuestionId, _CORRECT_STATE);
         }
         else {
             this.quizState.wrong++;
-            this.updateQuestionStat(this.quizState.currentQuestionId, -1);
+            this.updateQuestionStat(this.quizState.currentQuestionId, _WRONG_STATE);
         }
 
         this.nextStep();
@@ -59,7 +62,7 @@ class Quiz {
 
     }
 
-    showSummary() {
+    generateResult(){
 
         let results = [];
         let storedResults = localStorage.getItem('_quiz');
@@ -74,17 +77,43 @@ class Quiz {
             missed: this.quizState.missed
         });
 
-        localStorage.setItem('_quiz', JSON.stringify(results));
+        return results;
 
+    }
+
+    storeResults(results){
+        localStorage.setItem('_quiz', JSON.stringify(results));
+    }
+
+    calculateChange(results){
         let improvedCorrect = null;
         if (results.length > 1) {
             let previousCorrect = results[results.length - 2].correct;
             improvedCorrect = previousCorrect === 0 ? 1 : (this.quizState.correct - previousCorrect) / previousCorrect;
             improvedCorrect = improvedCorrect * 100;
         }
+        return improvedCorrect;
+    }
 
+    showSummary() {
 
+        let results = this.generateResult();
+
+        this.storeResults(results);
+
+        let improvedCorrect = this.calculateChange(results);
         let percentageResult = ((this.quizState.correct / this.quiz.questions.length) * 100);
+
+        let tpl = this.generateSummaryTpl(percentageResult, improvedCorrect);
+
+        this.container.removeClass('quiz--board');
+        this.container.addClass('quiz--summary');
+
+        this.quizSummary.html(tpl);
+    }
+
+    generateSummaryTpl(percentageResult, improvedCorrect) {
+
         let tpl = `
         Ocena: ${percentageResult.toFixed(2)}%<br />
         <div class="timer">
@@ -94,17 +123,14 @@ class Quiz {
         if (improvedCorrect !== null) {
             tpl += `W porównaniu do poprzedniego wyniku: ${improvedCorrect}%`;
         }
+        return tpl;
 
-        this.container.removeClass('quiz--board');
-        this.container.addClass('quiz--summary');
-
-        this.quizSummary.html(tpl);
     }
 
     onTimeLeft() {
 
         this.quizState.missed++;
-        this.updateQuestionStat(this.quizState.currentQuestionId, 0);
+        this.updateQuestionStat(this.quizState.currentQuestionId, _MISSED_STATE);
         this.nextStep();
 
     }
@@ -137,7 +163,6 @@ class Quiz {
         this.quizState.currentQuestion = question;
 
         this.updateQuestionStat(this.quizState.currentQuestionId, null);
-
 
         let buttonValue = 'Dalej';
         if (questionId === this.quiz.questions.length - 1) {
@@ -214,13 +239,13 @@ class QuizStats {
             else if (questionState === null) {
                 className = 'current';
             }
-            else if (questionState === 1) {
+            else if (questionState === _CORRECT_STATE) {
                 className = 'correct';
             }
-            else if (questionState === -1) {
+            else if (questionState === _WRONG_STATE) {
                 className = 'wrong';
             }
-            else if (questionState === 0) {
+            else if (questionState === _MISSED_STATE) {
                 className = 'missed';
             }
 
