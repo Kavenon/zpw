@@ -136,7 +136,7 @@ class Quiz {
 
         return new Promise((resolve, reject) => {
 
-            if (isNaN(quizId)) {
+            if (!quizId || isNaN(quizId)) {
                 reject();
             }
             $.get('./quiz/quiz-' + quizId + '.json')
