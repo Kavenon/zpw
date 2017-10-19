@@ -134,9 +134,9 @@ class Quiz {
         }
 
 
-        let percentageResult = (this.quizState.correct/this.quiz.questions.length)*100;
+        let percentageResult = ((this.quizState.correct/this.quiz.questions.length)*100);
         let tpl = `
-        Ocena: ${percentageResult}%<br />
+        Ocena: ${percentageResult.toFixed(2)}%<br />
         <div class="timer">
             <div class="timer__progress" style="width:${percentageResult}%"></div>
         </div><br />`;
