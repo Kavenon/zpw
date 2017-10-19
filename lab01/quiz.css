@@ -32,7 +32,7 @@ ul.quiz__steps {
 }
 
 .quiz-question__options li:hover {
-    background: #d8dbde;
+    background: rgba(133, 206, 54, 0.29);
 }
 
 .quiz-question__topic {

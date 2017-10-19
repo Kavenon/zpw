@@ -21,7 +21,6 @@ class Quiz {
         this.quizSummary = this.container.find('.jq-quiz__summary');
 
         this.quizQuestion.on('click', '.jq-quiz_action', this.onAction);
-
         this.quizSelector.on('change', (e) => {
             let $selectedQuiz = $(e.target).val();
             this.loadQuiz($selectedQuiz)
@@ -220,10 +219,13 @@ class Quiz {
 
 
         for(let [index, answer] of shuffle(question.answers).entries()){
-            console.log(question.answers, answer, question.answers.indexOf(answer));
-            options += `<li><label for="o${index}"><input class="jq-quiz__answer" id="o${index}" type="${optionType}" name="${questionId}" value="${question.answers.indexOf(answer)}">${answer}</label></li>`;
+            options += `
+            <li>
+                <label for="o${index}">
+                    <input class="jq-quiz__answer" id="o${index}" type="${optionType}" name="${questionId}" value="${question.answers.indexOf(answer)}">${answer}
+                </label>
+            </li>`;
         }
-
 
         let buttonValue = 'Dalej';
         if(questionId === this.quiz.questions.length - 1){
@@ -285,7 +287,7 @@ class Timer {
 
         this.max = max;
         this.container = container;
-        this.progress =  $(container).find('.jq-timer__progress');
+        this.progress =  $(container).find('.timer__progress');
         this.time = 0;
         this.loop = null;
 
@@ -327,8 +329,4 @@ $(function(){
     let quizz = new Quiz($('#quiz-1'));
 });
 
-
-class QuizState {
-
-}
 
