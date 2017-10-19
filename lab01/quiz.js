@@ -1,6 +1,7 @@
 'use strict';
 
 function shuffle(array){
+    array = [].concat(array);
     return array.sort(function() {
         return .5 - Math.random();
     });
@@ -45,6 +46,7 @@ class Quiz {
             }
 
             return answers
+                .get()
                 .filter((item) => question.correct.indexOf(parseInt(item)) === -1)
                 .length === 0;
 
@@ -59,6 +61,12 @@ class Quiz {
         }
 
 
+        this.nextStep();
+
+
+    }
+
+    nextStep(){
         if(this.quizState.currentQuestionId === this.quiz.questions.length - 1){
             this.hideQuestion();
             this.showSummary();
@@ -66,8 +74,6 @@ class Quiz {
         else {
             this.showQuestion(this.quizState.currentQuestionId + 1);
         }
-
-
     }
 
     hideQuestion(){
@@ -98,14 +104,51 @@ class Quiz {
                 className = 'missed';
             }
 
-            return `<li class="${className}">${index+1}</li>`;
+            return `<li class="step-progress__item ${className}">${index+1}</li>`;
         }).join('\n');
 
         $(this.quizSteps).html(tpl);
     }
 
     showSummary(){
-        let tpl = `summary`;
+
+        let results = [];
+        let storedResults = localStorage.getItem('_quiz');
+        if(storedResults){
+            results = JSON.parse(storedResults);
+        }
+
+        results.push({
+            time: new Date(),
+            correct: this.quizState.correct,
+            wrong: this.quizState.wrong,
+            missed: this.quizState.missed
+        });
+
+        localStorage.setItem('_quiz', JSON.stringify(results));
+
+        let improvedCorrect = null;
+        if(results.length > 1){
+            let previousCorrect = results[results.length - 2].correct;
+            improvedCorrect = previousCorrect === 0 ? 1 : (this.quizState.correct - previousCorrect) / previousCorrect;
+            improvedCorrect = improvedCorrect * 100;
+        }
+
+
+        let percentageResult = (this.quizState.correct/this.quiz.questions.length)*100;
+        let tpl = `
+        Ocena: ${percentageResult}%<br />
+        <div class="timer">
+            <div class="timer__progress" style="width:${percentageResult}%"></div>
+        </div><br />`;
+
+        if(improvedCorrect !== null){
+            tpl += `W porównaniu do poprzedniego wyniku: ${improvedCorrect}%`;
+        }
+
+        this.container.removeClass('quiz--board');
+        this.container.addClass('quiz--summary');
+
         this.quizSummary.html(tpl);
     }
 
@@ -113,6 +156,7 @@ class Quiz {
 
         this.quizState.missed++;
         this.updateQuestionStat(this.quizState.currentQuestionId, 0);
+        this.nextStep();
 
     }
 
@@ -171,19 +215,28 @@ class Quiz {
         }
 
         let options = ``;
+
+
+
+
         for(let [index, answer] of shuffle(question.answers).entries()){
-            options += `<li><input class="jq-quiz__answer" type="${optionType}" name="${questionId}" value="${index}">${answer}</li>`;
+            console.log(question.answers, answer, question.answers.indexOf(answer));
+            options += `<li><label for="o${index}"><input class="jq-quiz__answer" id="o${index}" type="${optionType}" name="${questionId}" value="${question.answers.indexOf(answer)}">${answer}</label></li>`;
         }
+
 
         let buttonValue = 'Dalej';
         if(questionId === this.quiz.questions.length - 1){
             buttonValue = 'Zakończ';
         }
 
-        let button = `<button class="jq-quiz__action">${buttonValue}</button>`;
+        let button = `<button type="button" class="btn btn-primary jq-quiz__action">${buttonValue}</button>`;
 
         let tpl = `
         <div class="quiz-question">
+            <p class="quiz-question__topic">
+                ${question.question}
+            </p>
             <ul class="quiz-question__options">
                 ${options}
             </ul>
@@ -203,7 +256,8 @@ class Quiz {
     }
 
     showBoard(){
-        this.quizBoard.removeClass('hidden');
+        this.container.removeClass('quiz--select');
+        this.container.addClass('quiz--board');
     }
 
     loadQuiz(quizId = 1){
@@ -216,7 +270,8 @@ class Quiz {
             $.get('./quiz/quiz-' + quizId + '.json')
                 .then(function(result){
                    resolve(result);
-                });
+                })
+                .catch(() => alert('Nie znaleziono quizu.'))
 
         });
 

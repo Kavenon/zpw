@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Quiz</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="main.css" />
     <link rel="stylesheet" href="quiz.css" />
     <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="quiz.js" type="text/javascript"></script>
@@ -11,46 +13,58 @@
 <body>
 
 <div class="container">
-    <div class="row">
-        <div class="col-xs">
-            <div class="quiz" id="quiz-1">
 
-                <div class="quiz__head">
+    <div class="quiz quiz--select" id="quiz-1">
 
-                    <h1 class="quiz__head-title">
-                        Wybierz quiz
-                    </h1>
-                    <div class="quiz__head-select">
-                        <select name="quiz" class="jq-quiz__select">
-                            <option value="">--</option>
-                            <option value="1">Quiz 1</option>
-                            <option value="2">Quiz 2</option>
-                        </select>
+        <div class="row justify-content-md-center">
+            <div class="col-sm-6">
+
+
+
+                <div class="quiz__select card card-block">
+                    <div class="title-block">
+                        <h3 class="title">
+                            Wybierz quiz
+                        </h3>
                     </div>
-
+                    <select name="quiz" class="form-control jq-quiz__select">
+                        <option value="">--</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                    </select>
                 </div>
 
-                <div class="quiz__board jq-quiz__board hidden" style="background-color: red">
+                <div class="quiz__board jq-quiz__board">
 
-                    <h2 class="jq-quiz__title"></h2>
+                    <div class="title-block">
+                        <h3 class="title jq-quiz__title">
 
-                    <ul class="step-progress jq-quiz__steps">
-
-                    </ul>
+                        </h3>
+                    </div>
 
                     <div class="quiz__timer timer jq-quiz__timer">
                         <div class="timer__progress jq-timer__progress"></div>
                     </div>
 
-                    <div class="quiz__questions jq-quiz__question">
+                    <div class="card card-block">
 
-                    </div>
+                        <ul class="quiz__steps step-progress jq-quiz__steps">
 
-                    <div class="jq-quiz__summary">
+                        </ul>
+
+                        <div class="quiz__questions jq-quiz__question">
+
+                        </div>
+
+                        <div class="quiz__summary jq-quiz__summary">
+
+                        </div>
 
                     </div>
 
                 </div>
+
+
 
             </div>
 

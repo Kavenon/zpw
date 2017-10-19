@@ -1,15 +1,114 @@
 .quiz {
-    margin:50px 0;
+    margin: 50px 0;
+}
 
+ul.quiz__steps {
+    margin-bottom: 20px;
+}
+
+.quiz-question__options {
+    margin: 0 0 15px;
+    padding: 0;
+    list-style-type: none;
+}
+
+.quiz-question__options label {
+    display: block;
+    margin: 0;
+    cursor: pointer;
+}
+
+.quiz-question__options input {
+    margin-right: 5px;
+}
+
+.quiz-question__options li {
+    padding: 5px 10px;
+    margin-bottom: 5px;
+}
+
+.quiz-question__options li:nth-child(even) {
+    background: #F0F3F6;
+}
+
+.quiz-question__options li:hover {
+    background: #d8dbde;
+}
+
+.quiz-question__topic {
+    font-weight: bold;
+}
+
+.quiz__select,
+.quiz__board {
+    display: none;
+}
+
+.quiz--select .quiz__select {
+    display: block;
+}
+
+.quiz--board .quiz__board {
+    display: block;
+}
+
+.quiz--summary .quiz__board,
+.quiz--summary .quiz__summary {
+    display: block;
 }
 
 .timer {
-    width:200px;
-    border:1px solid black;
-    height:50px;
+    background: #d7dde4;
+    border-radius: 10px;
+    height: 3px;
 }
+
 .timer__progress {
-    width:0%;
-    height:100%;
-    background:green;
+    width: 0;
+    height: 100%;
+    background: #85CE36;
+    transition: width linear 0.2s;
+}
+
+.step-progress {
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    display: table;
+    table-layout: fixed;
+
+    width: 100%;
+}
+
+.step-progress__item {
+    display: table-cell;
+    text-align: center;
+    border-bottom: 2px solid;
+}
+
+.step-progress__item.not-visited {
+    border-color: #d7dde4;
+    color: #d7dde4;
+}
+
+.step-progress__item.correct {
+    border-color: #85CE36;
+    color: #85CE36;
+}
+
+.step-progress__item.wrong {
+    border-color: #FF4444;
+    color: #FF4444;
+}
+
+.step-progress__item.missed {
+    border-color: #f1c40f;
+    color: #f1c40f;
+}
+
+.step-progress__item.current {
+    border-color: #3498db;
+    color: #3498db;
 }
