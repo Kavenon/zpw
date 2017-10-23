@@ -1,0 +1,16 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Witaj {{imie}} {{nazwisko}}
+  </h1>
+</div>
+
+Student {{stud.name}} {{stud.surname}} <span *ngIf="stud.degree >= 3">ma zaliczenie</span>
+
+<ul>
+  <li *ngFor="let student of gr">
+    <span *ngIf="student.degree >= 3">*</span> {{student.name}}
+  </li>
+</ul>
+
+<hello-student></hello-student>
