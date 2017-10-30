@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="bike-list-sum" [ngStyle]="getCountStyle()">
+        Ilość wolnych rowerów: {{bikeCount}}
+      </div>
+    </div>
+
+    <div class="col-md-4" *ngFor="let bike of bikes">
+      <bike [bike]="bike" (onOrder)="onOrder(bike)" (onReturn)="onReturn(bike)"></bike>
+    </div>
+
+    <div class="col-md-12">
+      <div class="bike-list-sum" [ngStyle]="getCountStyle()">
+        Ilość wolnych rowerów: {{bikeCount}}
+      </div>
+    </div>
+  </div>
+</div>

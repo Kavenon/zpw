@@ -1,0 +1,19 @@
+<div class="card">
+  <img class="card-img-top" [src]="bike.img" alt="Card image cap">
+  <div class="card-body">
+    <h4 class="card-title">{{bike.name | uppercase}} <small>{{bike.id}}</small></h4>
+    <p class="card-text">{{bike.description}}</p>
+    <p class="card-text">
+      Wolnych: {{bike.count > 0 ? bike.count : 'Brak'}}
+    </p>
+    <p class="card-text">
+      Cena: {{bike.price.value | currency:bike.price.currency:true}}
+    </p>
+    <p class="card-text">
+      Zamowione: {{bike.ordered}}
+
+    </p>
+    <button class="btn btn-primary" (click)="orderBike()" *ngIf="bike.count > 0">+</button>
+    <button class="btn " (click)="returnBike()" *ngIf="bike.ordered > 0">-</button>
+  </div>
+</div>
